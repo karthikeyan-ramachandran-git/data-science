@@ -8,4 +8,4 @@ Contains a Linear regression model created with `Python` language using Scikit-l
 2. [Auto](https://nbviewer.jupyter.org/github/karthikeyan-ramachandran-git/data-science/blob/master/auto/Auto%20-%20data%20analysis%20-%20R.ipynb)  
 Contains analysis of the Auto dataset with info about 392 cars from the 70's on 9 features, to uderstand the effects of each feature on the Fuel-efficiency of every car using `R`.
 
-<img src="https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https%3A%2F%2Fi.kym-cdn.com%2Fentries%2Ficons%2Ffacebook%2F000%2F028%2F021%2Fwork.jpg" width=400>
+![](https://en.meming.world/images/en/thumb/b/be/But_It%27s_Honest_Work.jpg/300px-But_It%27s_Honest_Work.jpg)
