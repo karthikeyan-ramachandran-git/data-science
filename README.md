@@ -1,6 +1,6 @@
 ## Welcome to my *ds-projects* repository
 
-This repository contains Data science projects I've worked on, during the course of me learning the subject, with some occasional notes taken (for future references).
+This repository contains Data science projects I've worked on, during the course of me learning the subject, with some occasional [notes taken](https://github.com/karthikeyan-ramachandran-git/ds-projects/tree/master/notes) (for future references).
 
 Some of those projects are listed below:
 1. [Boston housing - price prediction](https://nbviewer.jupyter.org/github/karthikeyan-ramachandran-git/ds-projects/blob/master/boston-housing/linear%20regression%20with%20scikit%20learn.ipynb)  
@@ -8,4 +8,4 @@ Contains a Linear regression model created with `Python` language using Scikit-l
 2. [Auto](https://nbviewer.jupyter.org/github/karthikeyan-ramachandran-git/ds-projects/blob/master/auto/Auto%20-%20data%20analysis%20-%20R.ipynb)  
 Contains analysis of the Auto dataset with info about 392 cars from the 70's on 9 features, to uderstand the effects of each feature on the Fuel-efficiency of every car using `R`.
 
-![It ain't much, but its hones work](https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https%3A%2F%2Fi.kym-cdn.com%2Fentries%2Ficons%2Ffacebook%2F000%2F028%2F021%2Fwork.jpg)
+<img src="https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https%3A%2F%2Fi.kym-cdn.com%2Fentries%2Ficons%2Ffacebook%2F000%2F028%2F021%2Fwork.jpg" alt="it aint much but it's honest work" width=400 style="vertical-align:middle">
