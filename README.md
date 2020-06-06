@@ -1,37 +1,11 @@
-## Welcome to GitHub Pages
+## Welcome to my *ds-projects* repository
 
-You can use the [editor on GitHub](https://github.com/karthikeyan-ramachandran-git/ds-projects/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This repository contains Data science projects I've worked on, during the course of me learning the subject, with some occasional notes taken (for future references).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Some of those projects are listed below:
+1. [Boston housing - price prediction](https://nbviewer.jupyter.org/github/karthikeyan-ramachandran-git/ds-projects/blob/master/boston-housing/linear%20regression%20with%20scikit%20learn.ipynb)  
+Contains a Linear regression model created with `Python` language using Scikit-learn library, to estimate Boston housing price based on the info collected from 506 neighborhoods around Boston on 13 features such as average number of rooms per house, average age of house, percent of household with low economic status.
+2. [Auto](https://nbviewer.jupyter.org/github/karthikeyan-ramachandran-git/ds-projects/blob/master/auto/Auto%20-%20data%20analysis%20-%20R.ipynb)  
+Contains analysis of the Auto dataset with info about 392 cars from the 70's on 9 features, to uderstand the effects of each feature on the Fuel-efficiency of every car using `R`.
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/karthikeyan-ramachandran-git/ds-projects/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+![It ain't much, but its hones work](https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https%3A%2F%2Fi.kym-cdn.com%2Fentries%2Ficons%2Ffacebook%2F000%2F028%2F021%2Fwork.jpg)
