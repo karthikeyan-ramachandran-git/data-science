@@ -1,0 +1,215 @@
+---
+title: "Logistic Regression Project"
+author: "Karthikeyan Ramachandran"
+date: "19/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Get the Data
+
+```{r}
+adult <- read.csv(file="data/adult_sal.csv", header=TRUE)
+head(adult)
+```
+
+```{r}
+# drop the redundant index X
+library(dplyr)
+adult <- select(adult, -X)
+```
+```{r}
+head(adult)
+```
+```{r}
+str(adult)
+```
+```{r}
+summary(adult)
+```
+# Data Cleaning
+
+```{r}
+table(adult$type_employer)
+```
+
+The data contains 1836 "?" values, which are NAs
+The Never-worked category has the lowest count of 7, followed by Without-pay of 14
+
+Combining the `Never-worked` and `Without-pay` into a single `Unemployed` group
+
+```{r}
+attach(adult)
+Unemployed <- function(job){
+  job <- as.character(job)
+  ifelse((job=='Never-Worked' | job=='Without-pay'), 'Unemployed', job)
+}
+adult$type_employer <- sapply(type_employer, FUN=Unemployed)
+```
+
+```{r}
+type_employer <- as.character(type_employer)
+type_employer <- ifelse((type_employer=='State-gov'|type_employer=='Local-gov'), 'SL-gov', type_employer)
+type_employer <- ifelse(grepl("Self-", type_employer), "self-emp", type_employer)
+type_employer <- as.factor(type_employer)
+adult$type_employer <- type_employer
+table(adult$type_employer)
+```
+
+```{r}
+table(marital)
+```
+
+```{r}
+marital <- as.character(marital)
+marital <- ifelse((marital=="Divorced" | marital=="Separated" | marital=="Widowed"), "Not-Married", marital)
+marital <- ifelse(grepl("Married-", marital), "Married", marital)
+adult$marital <- marital
+table(marital)
+```
+
+```{r}
+table(country)
+```
+
+```{r}
+# continents details
+Asia <- c('China','Hong','India','Iran','Cambodia','Japan', 'Laos' ,
+          'Philippines' ,'Vietnam' ,'Taiwan', 'Thailand')
+
+North.America <- c('Canada','United-States','Puerto-Rico' )
+
+Europe <- c('England' ,'France', 'Germany' ,'Greece','Holand-Netherlands','Hungary',
+            'Ireland','Italy','Poland','Portugal','Scotland','Yugoslavia')
+
+Latin.and.South.America <- c('Columbia','Cuba','Dominican-Republic','Ecuador',
+                             'El-Salvador','Guatemala','Haiti','Honduras',
+                             'Mexico','Nicaragua','Outlying-US(Guam-USVI-etc)','Peru',
+                            'Jamaica','Trinadad&Tobago')
+Other <- c('South')
+
+# country assgnment function
+group_country <- function(ctry){
+    if (ctry %in% Asia){
+        return('Asia')
+    }else if (ctry %in% North.America){
+        return('North.America')
+    }else if (ctry %in% Europe){
+        return('Europe')
+    }else if (ctry %in% Latin.and.South.America){
+        return('Latin.and.South.America')
+    }else{
+        return('Other')      
+    }
+}
+
+adult$country <- sapply(adult$country,group_country)
+
+
+```
+
+```{r}
+table(country)
+```
+
+```{r}
+str(adult)
+```
+
+```{r}
+adult[adult=="?"] <- NA
+```
+
+```{r}
+table(adult$type_employer)
+```
+
+```{r}
+library(Amelia)
+missmap(adult)
+```
+
+```{r}
+adult <- na.omit(adult)
+missmap(adult)
+```
+
+# EDA
+
+```{r}
+adult$marital <- as.factor(adult$marital)
+adult$country <- as.factor(adult$country)
+
+str(adult)
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(data=adult, aes(x=age)) +
+  geom_histogram(binwidth = 1, aes(fill=income), col="black") +
+  theme_bw()
+
+```
+
+```{r}
+ggplot(data=adult, aes(hr_per_week)) +
+  geom_histogram()
+```
+
+```{r}
+adult <- rename(adult, region=country)
+```
+
+```{r}
+ggplot(adult, aes(region)) +
+  geom_bar(aes(fill=income), col="black") +
+  coord_flip()
+```
+
+# Building a model
+
+```{r}
+head(adult)
+```
+
+```{r}
+library(caTools)
+set.seed(101)
+sample <- sample.split(adult)
+
+train <- subset(adult, sample==TRUE)
+test <- subset(adult, sample!=TRUE)
+```
+
+```{r}
+glm.fit <- glm(income~age+type_employer+sex+region+capital_gain+capital_loss+education, data=train, family=binomial(logit))
+summary(glm.fit)
+```
+
+```{r}
+new.model <- step(glm.fit, direction = "forward")
+```
+
+```{r}
+summary(new.model)
+```
+
+```{r}
+glm.prob <- predict(new.model, test, type='response')
+glm.pred <- ifelse(glm.prob > 0.5, 1, 0)
+contrasts(test$income)
+```
+
+```{r}
+y <- ifelse(test$income=="<=50K", 0, 1)
+table(glm.pred, y)
+```
+
+```{r}
+paste("Error rate : ", round(mean(glm.pred != y)*100, 2), "%", sep="")
+```
+

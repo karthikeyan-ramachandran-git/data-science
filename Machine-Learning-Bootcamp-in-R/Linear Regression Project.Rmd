@@ -1,0 +1,91 @@
+---
+title: "Linear Regression Project"
+author: "Karthikeyan Ramachandran"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Get the data
+```{r}
+bike <- read.csv(file="data/bikeshare.csv", header=TRUE)
+head(bike)
+```
+
+We're interested in predicting the `count` - Number of bike rentals
+
+# Exploratory Data Analysis
+
+```{r}
+library(ggplot2)
+ggplot(data=bike, aes(x=temp, y=count)) +
+  geom_point(alpha=0.3, aes(col=count))
+```
+
+```{r}
+attach(bike)
+datetime.dt <- as.Date(datetime)
+
+ggplot(data=bike, aes(x=datetime.dt, y=count)) +
+  geom_point(aes(col=temp), alpha = 0.3) +
+  scale_color_gradient(low = 'green', high = 'red')
+```
+
+The correlation between temperature and count is : `r cor(temp, count)`
+
+```{r}
+ggplot(data=bike, aes(x=factor(season), y=count)) +
+  geom_boxplot(aes(col=factor(season))) +
+  theme_bw()
+```
+
+```{r}
+dt.posix <- as.POSIXct(datetime)
+bike$hour <- format(dt.posix, "%H")
+```
+
+Bike rental count vs Hours on working days
+
+```{r}
+attach(bike)
+ggplot(data.frame(filter(bike,workingday==1)), aes(x=hour, y=count)) +
+  geom_point(position=position_jitter(w=1,h=0), aes(col=temp)) +
+  scale_color_gradientn(colours = c('dark blue','blue','light blue','light green','yellow','orange','red')) +
+  theme_bw()
+```
+
+Bike rental count vs Hours on non working days
+
+```{r}
+ggplot(data.frame(filter(bike,workingday==0)), aes(x=hour, y=count)) +
+  geom_point(position=position_jitter(w=1,h=0), aes(col=temp)) +
+  scale_color_gradientn(colours = c('dark blue','blue','light blue','light green','yellow','orange','red')) +
+  theme_bw()
+```
+
+# Building the model
+
+```{r}
+temp.model <- lm(count~temp, data=bike)
+summary(temp.model)
+```
+
+## Model summary:
+* The F-statistic is greater than 1, which suggests that the predictors have significant relationship with the response
+* The temp has an estimated coefficient of 9.1705, so for every unit increase of temp the bike rental count increases by 9.17 units.
+
+```{r}
+predict(temp.model, newdata=data.frame(temp=25))
+```
+
+```{r}
+bike$hour <- as.numeric(bike$hour)
+```
+
+```{r}
+lm.fit <- lm(count~season+workingday+weather+temp, data=bike)
+summary(lm.fit)
+```
+

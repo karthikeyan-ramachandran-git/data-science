@@ -1,0 +1,100 @@
+---
+title: "Tree Methods Project"
+author: "Karthikeyan Ramachandran"
+date: "23/06/2020"
+output: html_document
+---
+
+# Get the data
+```{r}
+library(ISLR)
+df <- College
+head(df)
+```
+
+# EDA
+```{r}
+library(ggplot2)
+ggplot(data=df, aes(x=Room.Board, y=Grad.Rate)) +
+  geom_point(aes(col=Private)) +
+  ggtitle("Grad.Rate versus Room.Board")
+```
+
+```{r}
+ggplot(data=df, aes(P.Undergrad)) +
+  geom_histogram(col="black", aes(fill=Private)) +
+  ggtitle("Histogram of Undergrad students")
+```
+
+```{r}
+ggplot(data=df, aes(Grad.Rate)) +
+  geom_histogram(col="black", aes(fill=Private)) +
+  ggtitle("Histogram of Undergrad students")
+```
+
+```{r}
+subset(df, Grad.Rate>100)
+```
+
+```{r}
+df['Cazenovia College','Grad.Rate'] <- 100
+```
+
+# Train Test Split
+
+```{r}
+library(caTools)
+sample <- sample.split(df$Private, SplitRatio=0.7)
+
+train <- subset(df, sample==TRUE)
+test <- subset(df, sample==FALSE)
+```
+
+# Decision tree
+
+```{r}
+library(rpart)
+dt.fit <- rpart(Private~., data=train)
+
+# prediction
+dt.pred <- predict(dt.fit, newdata=test)
+
+head(dt.pred)
+```
+
+```{r}
+dt.pred.class <- ifelse(dt.pred[,"Yes"] > dt.pred[,"No"], "Yes", "No")
+head(dt.pred.class)
+```
+
+```{r}
+table(dt.pred.class, test$Private)
+```
+
+```{r}
+library(rpart.plot)
+rpart.plot(dt.fit)
+```
+
+# Random Forest
+
+```{r}
+library(randomForest)
+
+rf.fit <- randomForest(Private~., data=train, importance=TRUE)
+rf.fit$confusion
+```
+
+```{r}
+rf.fit$importance
+```
+
+```{r}
+rf.pred <- predict(rf.fit, newdata=test)
+table(rf.pred, test$Private)
+```
+
+```{r}
+varImpPlot(rf.fit)
+```
+

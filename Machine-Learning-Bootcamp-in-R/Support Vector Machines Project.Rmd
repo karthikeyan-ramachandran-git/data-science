@@ -1,0 +1,89 @@
+---
+title: "Support Vector Machines Project"
+author: "Karthikeyan Ramachandran"
+output: html_document
+---
+
+```{r}
+loans <- read.csv(file="data/loan_data.csv",header=TRUE)
+head(loans)
+```
+
+```{r}
+str(loans)
+```
+
+```{r}
+summary(loans)
+```
+
+```{r}
+loans$inq.last.6mths <- as.factor(loans$inq.last.6mths)
+loans$delinq.2yrs <- as.factor(loans$delinq.2yrs)
+loans$pub.rec <- as.factor(loans$pub.rec)
+loans$not.fully.paid <- as.factor(loans$not.fully.paid)
+loans$credit.policy <- as.factor(loans$credit.policy)
+```
+
+# EDA
+
+```{r}
+library(ggplot2)
+
+ggplot(data=loans, aes(fico)) +
+  geom_histogram(aes(fill=not.fully.paid), col="black") +
+  ggtitle("Histogram of fico")
+```
+
+```{r}
+ggplot(data=loans, aes(x=factor(purpose))) +
+  geom_bar(aes(fill=not.fully.paid), col="black", position="dodge") +
+  ggtitle("Barplot of various purpose")
+```
+
+```{r}
+ggplot(data=loans, aes(x=int.rate, y=fico)) +
+  geom_point(aes(col=not.fully.paid), alpha=0.5) +
+  theme_bw()
+```
+
+# Building the Model
+
+## Train and Test sets
+
+```{r}
+library(caTools)
+
+sample <- sample.split(loans$not.fully.paid, SplitRatio=0.7)
+
+train <- subset(loans, sample==TRUE)
+test <- subset(loans, sample==FALSE)
+```
+
+## Training model
+
+```{r}
+library(e1071)
+svm.fit <- svm(not.fully.paid~., data=train)
+summary(svm.fit)
+```
+
+```{r}
+svm.pred <- predict(svm.fit, newdata=test)
+table(svm.pred, test$not.fully.paid)
+```
+
+# Tuning the model
+
+```{r}
+set.seed(1)
+g <- c(0.5, 1, 2, 3, 4)
+c <- c(0.1, 1, 10, 100, 1000)
+
+# tune.results <- tune(svm,train.x=not.fully.paid~., data=train,kernel='radial',ranges=list(cost=c, gamma=g))
+
+tune.results <- tune(svm,train.x=not.fully.paid~., data=train,kernel='radial',ranges=list(cost=c[1], gamma=g[1]))
+
+summary(tune.results)
+```
+

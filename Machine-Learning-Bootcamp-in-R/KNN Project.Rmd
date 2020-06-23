@@ -1,0 +1,105 @@
+---
+title: "KNN Project"
+author: "Karthikeyan Ramachandran"
+output: 
+  html_document: 
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Get the Data
+
+```{r}
+library(ISLR)
+head(iris)
+```
+```{r}
+str(iris)
+```
+
+# Standardize the Data
+
+```{r}
+df <- scale(iris[,1:4])
+head(df)
+```
+```{r}
+var(df[,1])
+```
+```{r}
+final.data <- data.frame(df, Species=iris$Species)
+head(final.data)
+```
+```{r}
+library(caTools)
+sample <- sample.split(final.data$Species, SplitRatio = .70)
+train <- subset(final.data, sample == TRUE)
+test <- subset(final.data, sample == FALSE)
+```
+
+# Building KNN model
+```{r}
+library(class)
+knn.fit <- knn(train[1:4],test[1:4],train$Species,k=1)
+
+paste("Error rate: ",round(mean(knn.fit != test$Species)*100, 2), sep="")
+```
+
+# Choosing K value
+
+```{r}
+predicted.species <- NULL
+error.rate <- NULL
+
+for(i in 1:10){
+  set.seed(101)
+  predicted.species <- knn(train[1:4],test[1:4],train$Species,k=i)
+  error.rate[i] <- mean(predicted.species != test$Species)
+}
+
+```
+
+```{r}
+library(ggplot2)
+
+k.values <- 1:10
+error.df <- data.frame(k.values, error.rate)
+
+ggplot(error.df, aes(x=k.values, y=error.rate)) +
+  geom_point() +
+  geom_line(lty="dotted", color="red") +
+  theme_bw()
+```
+
+# Cross validation
+
+```{r}
+cv.predicted.species <- NULL
+cv.error.rate <- NULL
+
+for(i in 1:10){
+  set.seed(101)
+  cv.predicted.species <- knn.cv(final.data[1:4],final.data$Species,k=i)
+  cv.error.rate[i] <- mean(cv.predicted.species != final.data$Species)
+}
+```
+
+```{r}
+k.values <- 1:10
+cv.error.df <- data.frame(k.values, cv.error.rate)
+
+ggplot(cv.error.df, aes(x=k.values, y=cv.error.rate)) +
+  geom_point() +
+  geom_line(lty="dotted", color="red") +
+  theme_bw()
+```
+
+Trying to predict using k=6
+```{r}
+knn.fit <- knn(train[1:4],test[1:4],train$Species,k=6)
+paste("Error rate: ",round(mean(knn.fit != test$Species)*100, 2), sep="")
+```
+
